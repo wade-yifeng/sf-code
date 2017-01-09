@@ -35,6 +35,5 @@ site/
 #application.properties
 #application.yml
 log.txt
-log/
 .env
 *.bak

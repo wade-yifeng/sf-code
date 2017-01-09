@@ -4,6 +4,9 @@ record the growth
 #sf-autocode
 根据db自动生成domain，dto，dao，manager
 
+#sf-autolog
+切面入参响应打印，异常捕获
+
 #sf-redis
 根据注解来做redis的demo
 

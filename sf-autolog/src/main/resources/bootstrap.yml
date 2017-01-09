@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: zcy-autolog-app
+  profiles:
+    active: default
+
+
+
+
