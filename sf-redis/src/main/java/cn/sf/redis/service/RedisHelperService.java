@@ -5,10 +5,6 @@ import cn.sf.redis.domain.CacheInfo;
 
 import java.util.List;
 
-/**
- * Created by hznijianfeng on 2016/3/21.
- */
-
 public interface RedisHelperService {
 
     //管理接口

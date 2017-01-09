@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-/**
- * Created by nijianfeng on 16/12/9.
- */
 @Controller
 @RequestMapping("/test")
 public class TestRedis {

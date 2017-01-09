@@ -7,9 +7,6 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by nijianfeng on 16/12/9.
- */
 @Component
 public class TestService {
 

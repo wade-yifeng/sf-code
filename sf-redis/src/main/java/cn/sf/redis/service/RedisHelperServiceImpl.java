@@ -15,10 +15,6 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by hznijianfeng on 2016/3/21.
- */
-
 @Component
 @Slf4j
 public class RedisHelperServiceImpl implements RedisHelperService {
