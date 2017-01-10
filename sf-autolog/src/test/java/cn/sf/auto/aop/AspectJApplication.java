@@ -1,4 +1,4 @@
-package cn.sf.auto.log;
+package cn.sf.auto.aop;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,7 +1,7 @@
-package cn.sf.auto.log.config;
+package cn.sf.auto.aop.config;
 
-import cn.sf.auto.log.annotations.AutoLog;
-import cn.sf.auto.log.annotations.AutoLogSkip;
+import cn.sf.auto.aop.annotations.AutoLog;
+import cn.sf.auto.aop.annotations.AutoLogSkip;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -20,12 +20,12 @@ import java.lang.reflect.Method;
 public class AutoLogAspectJ {
 
     //@within 用于匹配所以持有指定注解类型内的方法；代理织入
-    @Pointcut("@within(cn.sf.auto.log.annotations.AutoLog) && execution(public * *(..))")
+    @Pointcut("@within(cn.sf.auto.aop.annotations.AutoLog) && execution(public * *(..))")
     public void AutoLogAspectClass() {
     }
 
     //@annotation 用于匹配当前执行方法持有指定注解的方法；运行切入
-    @Pointcut("@annotation(cn.sf.auto.log.annotations.AutoLog)")
+    @Pointcut("@annotation(cn.sf.auto.aop.annotations.AutoLog)")
     public void AutoLogAspectMethod() {
     }
 

@@ -1,6 +1,6 @@
-package cn.sf.auto.log.clazz;
+package cn.sf.auto.aop.clazz;
 
-import cn.sf.auto.log.annotations.AutoExcp;
+import cn.sf.auto.aop.annotations.AutoExcp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

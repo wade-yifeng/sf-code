@@ -1,4 +1,4 @@
-package cn.sf.auto.log.annotations;
+package cn.sf.auto.aop.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

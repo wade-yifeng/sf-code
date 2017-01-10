@@ -1,7 +1,7 @@
-package cn.sf.auto.log.test.excp;
+package cn.sf.auto.aop.test.excpaop;
 
-import cn.sf.auto.log.base.BaseTest;
-import cn.sf.auto.log.clazz.ExcpClass;
+import cn.sf.auto.aop.base.BaseTest;
+import cn.sf.auto.aop.clazz.ExcpClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

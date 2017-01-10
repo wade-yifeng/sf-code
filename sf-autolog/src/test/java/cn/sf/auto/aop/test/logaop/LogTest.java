@@ -1,7 +1,7 @@
-package cn.sf.auto.log.test.log;
+package cn.sf.auto.aop.test.logaop;
 
-import cn.sf.auto.log.base.BaseTest;
-import cn.sf.auto.log.clazz.LogClass;
+import cn.sf.auto.aop.base.BaseTest;
+import cn.sf.auto.aop.clazz.LogClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

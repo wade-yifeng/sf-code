@@ -1,6 +1,6 @@
-package cn.sf.auto.log.base;
+package cn.sf.auto.aop.base;
 
-import cn.sf.auto.log.AspectJApplication;
+import cn.sf.auto.aop.AspectJApplication;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;

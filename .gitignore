@@ -19,12 +19,14 @@ target/
 .idea/
 .mine/
 logs/
+log/
+log.txt
+*.log
 dev.properties
 dubbo.properties
 dev-admin.properties
 dependency-reduced-pom.xml
 *.rdb
-*.log
 *.gz
 *apidocs/
 *.versionsBackup
@@ -34,6 +36,5 @@ _book/
 site/
 #application.properties
 #application.yml
-log.txt
 .env
 *.bak

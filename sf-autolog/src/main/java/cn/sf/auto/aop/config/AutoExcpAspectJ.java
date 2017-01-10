@@ -1,10 +1,10 @@
-package cn.sf.auto.log.config;
+package cn.sf.auto.aop.config;
 
-import cn.sf.auto.log.annotations.AutoExcp;
-import cn.sf.auto.log.annotations.AutoExcpSkip;
-import cn.sf.auto.log.excps.IPrintErrorLog;
-import cn.sf.auto.log.excps.IPrintInfoLog;
-import cn.sf.auto.log.excps.IReThrowException;
+import cn.sf.auto.aop.annotations.AutoExcp;
+import cn.sf.auto.aop.annotations.AutoExcpSkip;
+import cn.sf.auto.aop.excps.IPrintErrorLog;
+import cn.sf.auto.aop.excps.IPrintInfoLog;
+import cn.sf.auto.aop.excps.IReThrowException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -23,12 +23,12 @@ import java.lang.reflect.Method;
 public class AutoExcpAspectJ {
 
     //@within 用于匹配所以持有指定注解类型内的方法；代理织入
-    @Pointcut("@within(cn.sf.auto.log.annotations.AutoExcp) && execution(public * *(..))")
+    @Pointcut("@within(cn.sf.auto.aop.annotations.AutoExcp) && execution(public * *(..))")
     public void AutoLogAspectClass() {
     }
 
     //@annotation 用于匹配当前执行方法持有指定注解的方法；运行切入
-    @Pointcut("@annotation(cn.sf.auto.log.annotations.AutoExcp)")
+    @Pointcut("@annotation(cn.sf.auto.aop.annotations.AutoExcp)")
     public void AutoLogAspectMethod() {
     }
 
