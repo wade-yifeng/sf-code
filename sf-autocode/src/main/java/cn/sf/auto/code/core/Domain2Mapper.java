@@ -99,8 +99,8 @@ public class Domain2Mapper {
                 sb.append(genDeleteString());
             }
             sb.append(genMapperEndString());
-
-            CommonUtils.genFile(mapperPath + '/' + clazz + "Mapper.xml", sb.toString());
+            String className = clazz.substring(0,1).toUpperCase()+clazz.substring(1,clazz.length());
+            CommonUtils.genFile(mapperPath + '/' + className + "Mapper.xml", sb.toString());
         });
 
     }
@@ -114,21 +114,22 @@ public class Domain2Mapper {
 
     private static String genMapperStartString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.mapper_start.replace("${className}", clazz));
+        String className = clazz.substring(0,1).toUpperCase()+clazz.substring(1,clazz.length());
+        sb.append(MapperTemplate.mapper_start.replace("${className}", className));
         return sb.toString();
     }
 
     private static String genTableNameString() {
         StringBuilder sb = new StringBuilder();
-        String className = clazz;
-        className = CommonUtils.ruleConvert(className, StringConstants.CAMEL, StringConstants.UNDER_LINE);
-        sb.append(MapperTemplate.sql_id_tb.replace("${tableName}", className.substring(1, className.length())));
+        String className = CommonUtils.ruleConvert(clazz, StringConstants.CAMEL, StringConstants.UNDER_LINE);
+        sb.append(MapperTemplate.sql_id_tb.replace("${tableName}", className));
         return sb.toString();
     }
 
     private static String genResultMapString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.resultMap_start.replace("${className}", clazz));
+        String className = clazz.substring(0,1).toUpperCase()+clazz.substring(1,clazz.length());
+        sb.append(MapperTemplate.resultMap_start.replace("${className}", className));
         fields.forEach(f ->
                 sb.append(
                         MapperTemplate.resultMap_result

@@ -1,5 +1,6 @@
 package cn.sf.auto.code.core;
 
+import cn.sf.auto.code.util.StringConstants;
 import com.google.common.base.Splitter;
 import cn.sf.auto.code.config.PropertiesLoad;
 import cn.sf.auto.code.util.CommonUtils;
@@ -18,14 +19,19 @@ public class DaoManager {
         final String packageDao = PropertiesLoad.getByKey("package_dao", Boolean.TRUE);
         final String daoPackageDomain = PropertiesLoad.getByKey("dao_package_domain", Boolean.TRUE);
         final String daoPackageExtend = PropertiesLoad.getByKey("dao_package_extend", Boolean.TRUE);
-        final List<String> fileNames = Splitter.on(",")
+        List<String> fileNames = Splitter.on(",")
                 .omitEmptyStrings()
                 .trimResults()
                 .splitToList(PropertiesLoad.getByKey("dao_file_names", Boolean.TRUE))
                 .stream()
                 .collect(Collectors.toList());
+        if(fileNames.contains("all")){
+            CommonUtils.getAllTablesBySchema();
+            fileNames = StringConstants.allTableNames;
+        }
 
         fileNames.forEach(f -> {
+            f = CommonUtils.ruleConvert(f,StringConstants.UNDER_LINE,StringConstants.CAMEL);
             StringBuilder sbDao = new StringBuilder();
             sbDao.append("package " + packageDao + ";\r\n\r\n");
             sbDao.append("import lombok.extern.slf4j.Slf4j;\r\n");
@@ -37,7 +43,8 @@ public class DaoManager {
             sbDao.append("public class " + f + "Dao extends "+
                     daoPackageExtend.substring(daoPackageExtend.lastIndexOf(".")+1) +"<" + f + "> {\r\n");
             sbDao.append("\r\n\r\n}");
-            CommonUtils.genFile(daoPath + '/' + f + "Dao.java", sbDao.toString());
+            String className = f.substring(0,1).toUpperCase()+f.substring(1,f.length());
+            CommonUtils.genFile(daoPath + '/' + className + "Dao.java", sbDao.toString());
         });
 
     }
@@ -50,14 +57,18 @@ public class DaoManager {
         final String managerPath = PropertiesLoad.getByKey("manager_path", Boolean.TRUE);
         final String packageManager = PropertiesLoad.getByKey("package_manager", Boolean.TRUE);
         final String managerPackageDao = PropertiesLoad.getByKey("manager_package_dao", Boolean.TRUE);
-        final List<String> fileNames = Splitter.on(",")
+        List<String> fileNames = Splitter.on(",")
                 .omitEmptyStrings()
                 .trimResults()
                 .splitToList(PropertiesLoad.getByKey("manager_file_names", Boolean.TRUE))
                 .stream()
                 .collect(Collectors.toList());
-
+        if(fileNames.contains("all")){
+            CommonUtils.getAllTablesBySchema();
+            fileNames = StringConstants.allTableNames;
+        }
         fileNames.forEach(f -> {
+            f = CommonUtils.ruleConvert(f,StringConstants.UNDER_LINE,StringConstants.CAMEL);
             StringBuilder sbManager = new StringBuilder();
             sbManager.append("package " + packageManager + ";\r\n\r\n");
             sbManager.append("import lombok.extern.slf4j.Slf4j;\r\n");
@@ -70,7 +81,8 @@ public class DaoManager {
             sbManager.append("\t@Autowired\r\n");
             sbManager.append("\tprivate " + f + "Dao " + f.substring(0, 1).toLowerCase() + f.substring(1) + "Dao;\r\n");
             sbManager.append("\r\n\r\n}");
-            CommonUtils.genFile(managerPath + '/' + f + "Manager.java", sbManager.toString());
+            String className = f.substring(0,1).toUpperCase()+f.substring(1,f.length());
+            CommonUtils.genFile(managerPath + '/' + className + "Manager.java", sbManager.toString());
         });
     }
 
