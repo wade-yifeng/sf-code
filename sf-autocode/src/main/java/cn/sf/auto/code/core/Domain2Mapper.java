@@ -1,20 +1,20 @@
 package cn.sf.auto.code.core;
 
 import cn.sf.auto.code.config.PropertiesLoad;
+import cn.sf.auto.code.domain.DBMap;
 import cn.sf.auto.code.util.CommonUtils;
 import cn.sf.auto.code.util.StringConstants;
 import com.google.common.base.Splitter;
-import cn.sf.auto.code.exps.AutoCodeException;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Domain2Mapper {
 
-    private static Class clazz;
-    private static List<Field> fields;  //remove serialVersionUID
+    private static String clazz;
+    private static List<String> fields;  //remove serialVersionUID
     private static List<String> dateNowVal;
     private static List<String> dynamicCondition;
     private static List<String> mapperIds;
@@ -47,25 +47,27 @@ public class Domain2Mapper {
             return;
         }
         final String mapperPath = PropertiesLoad.getByKey("mapper_path", Boolean.TRUE);
-        final String packageMapper = PropertiesLoad.getByKey("package_mapper", Boolean.TRUE);
-        final List<String> classNames = Splitter.on(",")
+        List<String> classNames = Splitter.on(",")
                 .omitEmptyStrings()
                 .trimResults()
                 .splitToList(PropertiesLoad.getByKey("mapper_class_names", Boolean.TRUE))
                 .stream()
                 .collect(Collectors.toList());
+        if(classNames.contains("all")){
+            CommonUtils.getAllTablesBySchema();
+            classNames = StringConstants.allTableNames;
+        }
 
         classNames.forEach(c -> {
-            try {
-                clazz = Class.forName(packageMapper + "." + c);
-            } catch (Exception e) {
-                String message = c + " class is not exist. ";
-                throw AutoCodeException.valueOf(message, e);
+            StringConstants.tableCommentMap = Maps.newHashMap();
+            StringConstants.tableMap = Maps.newHashMap();
+            fields = Lists.newArrayList();
+            clazz = CommonUtils.ruleConvert(c, StringConstants.UNDER_LINE, StringConstants.CAMEL);
+            //填充fields
+            CommonUtils.getTableInfoByTableName(c);
+            for(DBMap dbMap : StringConstants.tableMap.get(c)){
+                fields.add(CommonUtils.ruleConvert(dbMap.getField(), StringConstants.UNDER_LINE, StringConstants.CAMEL));
             }
-            fields = Arrays.asList(clazz.getDeclaredFields());
-            fields = fields.stream()
-                    .filter(f -> !(f.getName().equals("serialVersionUID")))
-                    .collect(Collectors.toList());
 
             StringBuilder sb = new StringBuilder();
             //加上xml的头
@@ -98,7 +100,7 @@ public class Domain2Mapper {
             }
             sb.append(genMapperEndString());
 
-            CommonUtils.genFile(mapperPath + clazz.getSimpleName() + "Mapper.xml", sb.toString());
+            CommonUtils.genFile(mapperPath + '/' + clazz + "Mapper.xml", sb.toString());
         });
 
     }
@@ -112,13 +114,13 @@ public class Domain2Mapper {
 
     private static String genMapperStartString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.mapper_start.replace("${className}", clazz.getSimpleName()));
+        sb.append(MapperTemplate.mapper_start.replace("${className}", clazz));
         return sb.toString();
     }
 
     private static String genTableNameString() {
         StringBuilder sb = new StringBuilder();
-        String className = clazz.getSimpleName();
+        String className = clazz;
         className = CommonUtils.ruleConvert(className, StringConstants.CAMEL, StringConstants.UNDER_LINE);
         sb.append(MapperTemplate.sql_id_tb.replace("${tableName}", className.substring(1, className.length())));
         return sb.toString();
@@ -126,12 +128,12 @@ public class Domain2Mapper {
 
     private static String genResultMapString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.resultMap_start.replace("${className}", clazz.getSimpleName()));
+        sb.append(MapperTemplate.resultMap_start.replace("${className}", clazz));
         fields.forEach(f ->
                 sb.append(
                         MapperTemplate.resultMap_result
-                                .replace("${fieldName}", f.getName())
-                                .replace("${columnName}", CommonUtils.ruleConvert(f.getName(), StringConstants.CAMEL, StringConstants.UNDER_LINE))
+                                .replace("${fieldName}", f)
+                                .replace("${columnName}", CommonUtils.ruleConvert(f, StringConstants.CAMEL, StringConstants.UNDER_LINE))
                 ));
         sb.append(MapperTemplate.resultMap_end);
         return sb.toString();
@@ -141,12 +143,12 @@ public class Domain2Mapper {
         StringBuilder sb = new StringBuilder();
         sb.append(MapperTemplate.sql_id_cols_start);
         fields.forEach(f -> {
-            if (f.getName().equals("id")) {
+            if (f.equals("id")) {
                 //跳过
             } else {
                 sb.append(
                         MapperTemplate.sql_id_cols_value
-                                .replace("${columnName}", CommonUtils.ruleConvert(f.getName(), StringConstants.CAMEL, StringConstants.UNDER_LINE))
+                                .replace("${columnName}", CommonUtils.ruleConvert(f, StringConstants.CAMEL, StringConstants.UNDER_LINE))
                 );
             }
 
@@ -167,9 +169,9 @@ public class Domain2Mapper {
         StringBuilder sb = new StringBuilder();
         sb.append(MapperTemplate.sql_id_vals_start);
         fields.forEach(f -> {
-            if (f.getName().equals("id")) {
+            if (f.equals("id")) {
                 //跳过
-            } else if (dateNowVal.contains(f.getName())) {
+            } else if (dateNowVal.contains(f)) {
                 sb.append(
                         MapperTemplate.sql_id_vals_value
                                 .replace("${fieldName}", "now()")
@@ -177,7 +179,7 @@ public class Domain2Mapper {
             } else {
                 sb.append(
                         MapperTemplate.sql_id_vals_value
-                                .replace("${fieldName}", f.getName())
+                                .replace("${fieldName}", f)
                 );
             }
 
@@ -191,11 +193,11 @@ public class Domain2Mapper {
         StringBuilder sb = new StringBuilder();
         sb.append(MapperTemplate.sql_id_dynamic_condition_start);
         for (int i = 0; i < fields.size(); i++) {
-            if (!dynamicCondition.contains(fields.get(i).getName())) {
+            if (!dynamicCondition.contains(fields.get(i))) {
                 sb.append(
                         MapperTemplate.sql_id_dynamic_condition_value
-                                .replace("${fieldName}", fields.get(i).getName())
-                                .replace("${columnName}", CommonUtils.ruleConvert(fields.get(i).getName(), StringConstants.CAMEL, StringConstants.UNDER_LINE))
+                                .replace("${fieldName}", fields.get(i))
+                                .replace("${columnName}", CommonUtils.ruleConvert(fields.get(i), StringConstants.CAMEL, StringConstants.UNDER_LINE))
                 );
             }
         }
@@ -207,11 +209,11 @@ public class Domain2Mapper {
         StringBuilder sb = new StringBuilder();
         sb.append(MapperTemplate.sql_id_set_start);
         for (int i = 0; i < fields.size(); i++) {
-            if (!dynamicCondition.contains(fields.get(i).getName())) {
+            if (!dynamicCondition.contains(fields.get(i))) {
                 sb.append(
                         MapperTemplate.sql_id_set_value
-                                .replace("${fieldName}", fields.get(i).getName())
-                                .replace("${columnName}", CommonUtils.ruleConvert(fields.get(i).getName(), StringConstants.CAMEL, StringConstants.UNDER_LINE))
+                                .replace("${fieldName}", fields.get(i))
+                                .replace("${columnName}", CommonUtils.ruleConvert(fields.get(i), StringConstants.CAMEL, StringConstants.UNDER_LINE))
                 );
             }
         }
@@ -221,43 +223,43 @@ public class Domain2Mapper {
 
     private static String genInsertString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.insert_id_create.replace("${className}", clazz.getSimpleName()));
+        sb.append(MapperTemplate.insert_id_create.replace("${className}", clazz));
         return sb.toString();
     }
 
     private static String genPagingString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.paging_id_create.replace("${className}", clazz.getSimpleName()));
+        sb.append(MapperTemplate.paging_id_create.replace("${className}", clazz));
         return sb.toString();
     }
 
     private static String genCountString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.count_id_create.replace("${className}", clazz.getSimpleName()));
+        sb.append(MapperTemplate.count_id_create.replace("${className}", clazz));
         return sb.toString();
     }
 
     private static String genLoadString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.load_id_create.replace("${className}", clazz.getSimpleName()));
+        sb.append(MapperTemplate.load_id_create.replace("${className}", clazz));
         return sb.toString();
     }
 
     private static String genListString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.list_id_create.replace("${className}", clazz.getSimpleName()));
+        sb.append(MapperTemplate.list_id_create.replace("${className}", clazz));
         return sb.toString();
     }
 
     private static String genDeleteString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.delete_id_create.replace("${className}", clazz.getSimpleName()));
+        sb.append(MapperTemplate.delete_id_create.replace("${className}", clazz));
         return sb.toString();
     }
 
     private static String genDeletesString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.deletes_id_create.replace("${className}", clazz.getSimpleName()));
+        sb.append(MapperTemplate.deletes_id_create.replace("${className}", clazz));
         return sb.toString();
     }
 

@@ -37,7 +37,7 @@ public class DaoManager {
             sbDao.append("public class " + f + "Dao extends "+
                     daoPackageExtend.substring(daoPackageExtend.lastIndexOf(".")+1) +"<" + f + "> {\r\n");
             sbDao.append("\r\n\r\n}");
-            CommonUtils.genFile(daoPath + f + "Dao.java", sbDao.toString());
+            CommonUtils.genFile(daoPath + '/' + f + "Dao.java", sbDao.toString());
         });
 
     }
@@ -70,7 +70,7 @@ public class DaoManager {
             sbManager.append("\t@Autowired\r\n");
             sbManager.append("\tprivate " + f + "Dao " + f.substring(0, 1).toLowerCase() + f.substring(1) + "Dao;\r\n");
             sbManager.append("\r\n\r\n}");
-            CommonUtils.genFile(managerPath + f + "Manager.java", sbManager.toString());
+            CommonUtils.genFile(managerPath + '/' + f + "Manager.java", sbManager.toString());
         });
     }
 

@@ -1,18 +1,72 @@
 package cn.sf.auto.code.util;
 
 import cn.sf.auto.code.config.PropertiesLoad;
-import org.apache.commons.lang3.StringUtils;
+import cn.sf.auto.code.domain.DBMap;
 import cn.sf.auto.code.exps.AutoCodeException;
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.sql.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommonUtils {
+
+    public static void getTableInfoByTableName(String tableName) {
+        System.out.println(tableName + " start #################################");
+        System.out.println("execute sql: " +  StringConstants.selectSQL + "'" + tableName + "'");
+        try {
+            PreparedStatement ps = StringConstants.conn.prepareStatement(StringConstants.selectSQL + "'" + tableName + "'");
+            ResultSet rs = ps.executeQuery();
+            List<DBMap> tableMeta = Lists.newArrayList();
+            while (rs.next()) {
+                DBMap dbMap = new DBMap();
+                dbMap.setField(rs.getString(1));
+                dbMap.setType(rs.getString(2));
+                dbMap.setMemo(rs.getString(3));
+                dbMap.setMunericLength(rs.getString(4));
+                dbMap.setNumericScale(rs.getString(5));
+                dbMap.setIsNullable(rs.getString(6));
+                dbMap.setExtra(rs.getString(7));
+                dbMap.setIsDefault(rs.getString(8));
+                dbMap.setCharacterLength(rs.getString(9));
+                tableMeta.add(dbMap);
+                //打印数据库某个表每列的返回数据
+                System.out.println(dbMap);
+            }
+            System.out.println(tableName + " end #################################");
+            StringConstants.tableMap.put(tableName, tableMeta);
+
+            //获取表描述
+            ps = StringConstants.conn.prepareStatement("SELECT table_comment FROM Information_schema.tables WHERE  table_Name = " + "'" + tableName + "'");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                StringConstants.tableCommentMap.put(tableName, rs.getString(1));
+            }
+            CommonUtils.close(rs, ps, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void getAllTablesBySchema(){
+        try {
+            //获取表名列表
+            PreparedStatement ps = StringConstants.conn.prepareStatement("SELECT table_name FROM Information_schema.tables WHERE  table_schema = " + "'" + PropertiesLoad.getByKey("db_schema", Boolean.TRUE) + "'");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                StringConstants.allTableNames.add(rs.getString(1));
+            }
+            CommonUtils.close(rs, ps, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void genFile(String basePath, String content) {
         try {
