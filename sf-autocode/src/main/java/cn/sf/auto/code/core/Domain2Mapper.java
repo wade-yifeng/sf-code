@@ -428,17 +428,18 @@ public class Domain2Mapper {
                         "\t\tWHERE id = #{id}\r\n" +
                         "\t</delete>\r\n";
         public static String deletes_id_create =
-                        "\t<delete id=\"deletes\" parameterType=\"list\">\n" +
-                        "\t\tDELETE FROM\n" +
-                        "\t\t<include refid=\"tb\"/>\n" +
-                        "\t\tWHERE\n" +
-                        "\t\tid\n" +
-                        "\t\tIN (\n" +
-                        "\t\t\t<foreach collection=\"list\" index=\"index\" item=\"id\" separator=\",\">\n" +
-                        "\t\t\t\t#{id}\n" +
-                        "\t\t\t</foreach>\n" +
-                        "\t\t)\n" +
-                        "\t</delete>";
+                        "\t<delete id=\"deletes\" parameterType=\"list\">\r\n" +
+                        "\t\tDELETE FROM\r\n" +
+                        "\t\t<include refid=\"tb\"/>\r\n" +
+                        "\t\tWHERE\r\n" +
+                        "\t\tid\r\n" +
+                        "\t\tIN\r\n" +
+                        "\t\t(\r\n" +
+                        "\t\t\t<foreach collection=\"list\" index=\"index\" item=\"id\" separator=\",\">\r\n" +
+                        "\t\t\t\t#{id}\r\n" +
+                        "\t\t\t</foreach>\r\n" +
+                        "\t\t)\r\n" +
+                        "\t</delete>\r\n";
 
     }
 
