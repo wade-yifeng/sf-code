@@ -62,7 +62,7 @@ public class Domain2Mapper {
             StringConstants.tableCommentMap = Maps.newHashMap();
             StringConstants.tableMap = Maps.newHashMap();
             fields = Lists.newArrayList();
-            clazz = CommonUtils.ruleConvert(c, StringConstants.UNDER_LINE, StringConstants.CAMEL);
+            clazz = CommonUtils.firstUpper(CommonUtils.ruleConvert(c, StringConstants.UNDER_LINE, StringConstants.CAMEL));
             //填充fields
             CommonUtils.getTableInfoByTableName(c);
             for(DBMap dbMap : StringConstants.tableMap.get(c)){
@@ -109,7 +109,7 @@ public class Domain2Mapper {
                 sb.append(genDeletesString());
             }
             sb.append(genMapperEndString());
-            CommonUtils.genFile(mapperPath + '/' + CommonUtils.firstUpper(clazz) + "Mapper.xml", sb.toString());
+            CommonUtils.genFile(mapperPath + '/' + clazz + "Mapper.xml", sb.toString());
         });
 
     }
@@ -123,7 +123,7 @@ public class Domain2Mapper {
 
     private static String genMapperStartString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.mapper_start.replace("${className}", CommonUtils.firstUpper(clazz)));
+        sb.append(MapperTemplate.mapper_start.replace("${className}", clazz));
         return sb.toString();
     }
 
@@ -136,7 +136,7 @@ public class Domain2Mapper {
 
     private static String genResultMapString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.resultMap_start.replace("${className}", CommonUtils.firstUpper(clazz)));
+        sb.append(MapperTemplate.resultMap_start.replace("${className}", clazz));
         fields.forEach(f ->
                 sb.append(
                         MapperTemplate.resultMap_result
