@@ -78,10 +78,17 @@ public class Domain2Mapper {
             sb.append(genColsString());
             sb.append(genColsAllString());
             sb.append(genValsString());
+            sb.append(genValsListString());
             sb.append(genDynamicConditionString());
             sb.append(genSetString());
             if (mapperIds.contains("create")) {
-                sb.append(genInsertString());
+                sb.append(genCreateString());
+            }
+            if (mapperIds.contains("creates")) {
+                sb.append(genCreatesString());
+            }
+            if(mapperIds.contains("update")) {
+                sb.append(genUpdateString());
             }
             if (mapperIds.contains("paging")) {
                 sb.append(genPagingString());
@@ -98,9 +105,11 @@ public class Domain2Mapper {
             if (mapperIds.contains("delete")) {
                 sb.append(genDeleteString());
             }
+            if(mapperIds.contains("deletes")){
+                sb.append(genDeletesString());
+            }
             sb.append(genMapperEndString());
-            String className = clazz.substring(0,1).toUpperCase()+clazz.substring(1,clazz.length());
-            CommonUtils.genFile(mapperPath + '/' + className + "Mapper.xml", sb.toString());
+            CommonUtils.genFile(mapperPath + '/' + CommonUtils.firstUpper(clazz) + "Mapper.xml", sb.toString());
         });
 
     }
@@ -114,8 +123,7 @@ public class Domain2Mapper {
 
     private static String genMapperStartString() {
         StringBuilder sb = new StringBuilder();
-        String className = clazz.substring(0,1).toUpperCase()+clazz.substring(1,clazz.length());
-        sb.append(MapperTemplate.mapper_start.replace("${className}", className));
+        sb.append(MapperTemplate.mapper_start.replace("${className}", CommonUtils.firstUpper(clazz)));
         return sb.toString();
     }
 
@@ -128,8 +136,7 @@ public class Domain2Mapper {
 
     private static String genResultMapString() {
         StringBuilder sb = new StringBuilder();
-        String className = clazz.substring(0,1).toUpperCase()+clazz.substring(1,clazz.length());
-        sb.append(MapperTemplate.resultMap_start.replace("${className}", className));
+        sb.append(MapperTemplate.resultMap_start.replace("${className}", CommonUtils.firstUpper(clazz)));
         fields.forEach(f ->
                 sb.append(
                         MapperTemplate.resultMap_result
@@ -190,6 +197,30 @@ public class Domain2Mapper {
         return finalSb.toString().replace("#{now()}", "now()");
     }
 
+    private static String genValsListString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(MapperTemplate.sql_id_vals_list_start);
+        fields.forEach(f -> {
+            if (f.equals("id")) {
+                //跳过
+            } else if (dateNowVal.contains(f)) {
+                sb.append(
+                        MapperTemplate.sql_id_vals_list_value
+                                .replace("${fieldName}", "now()")
+                );
+            } else {
+                sb.append(
+                        MapperTemplate.sql_id_vals_list_value
+                                .replace("${fieldName}", f)
+                );
+            }
+
+        });
+        StringBuilder finalSb = new StringBuilder(sb.substring(0, sb.length() - 1));
+        finalSb.append(MapperTemplate.sql_id_vals_list_end);
+        return finalSb.toString().replace("#{item.now()}", "now()");
+    }
+
     private static String genDynamicConditionString() {
         StringBuilder sb = new StringBuilder();
         sb.append(MapperTemplate.sql_id_dynamic_condition_start);
@@ -222,9 +253,21 @@ public class Domain2Mapper {
         return sb.toString();
     }
 
-    private static String genInsertString() {
+    private static String genCreateString() {
         StringBuilder sb = new StringBuilder();
         sb.append(MapperTemplate.insert_id_create.replace("${className}", clazz));
+        return sb.toString();
+    }
+
+    private static String genCreatesString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(MapperTemplate.insert_id_creates);
+        return sb.toString();
+    }
+
+    private static String genUpdateString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(MapperTemplate.update_id_update.replace("${className}", clazz));
         return sb.toString();
     }
 
@@ -296,6 +339,10 @@ public class Domain2Mapper {
         public static String sql_id_vals_value = "#{${fieldName}},";
         public static String sql_id_vals_end = "\r\n\t</sql>\r\n";
 
+        public static String sql_id_vals_list_start = "\t<sql id=\"vals_list\">\r\n\t\t(";
+        public static String sql_id_vals_list_value = "#{item.${fieldName}},";
+        public static String sql_id_vals_list_end = ")\r\n\t</sql>\r\n";
+
         public static String sql_id_dynamic_condition_start = "\t<sql id=\"dynamic_condition\">\r\n";
         public static String sql_id_dynamic_condition_value = "\t\t<if test=\"${fieldName} != null \">AND ${columnName} = #{${fieldName}}</if>\r\n";
         public static String sql_id_dynamic_condition_end = "\t</sql>\r\n";
@@ -316,6 +363,28 @@ public class Domain2Mapper {
                         "\t\t<include refid=\"vals\"/>\r\n" +
                         "\t\t)\r\n" +
                         "\t</insert>\r\n";
+        public static String insert_id_creates =
+                        "\t<insert id=\"creates\" parameterType=\"list\">\r\n" +
+                        "\t\tINSERT INTO\r\n" +
+                        "\t\t<include refid=\"tb\"/>\r\n" +
+                        "\t\t(\r\n" +
+                        "\t\t<include refid=\"cols\"/>\r\n" +
+                        "\t\t)\r\n" +
+                        "\t\tVALUES\r\n" +
+                        "\t\t<foreach collection=\"list\" item=\"item\" index=\"index\" separator=\",\">\r\n" +
+                        "\t\t\t<include refid=\"vals_list\"/>\r\n" +
+                        "\t\t</foreach>\r\n"+
+                        "\t</insert>\r\n";
+        public static String update_id_update =
+                        "\t<update id=\"update\" parameterType=\"${className}\">\r\n"+
+                        "\t\tUPDATE\r\n" +
+                        "\t\t<include refid=\"tb\"/>\r\n" +
+                        "\t\t<set>\r\n"+
+                        "\t\t\tid=#{id}\r\n"+
+                        "\t\t\t<include refid=\"set\"/>\r\n"+
+                        "\t\t</set>\r\n"+
+                        "\t\tWHERE id=#{id}\r\n"+
+                        "\t</update>\r\n";
         public static String paging_id_create =
                         "\t<select id=\"paging\" parameterType=\"map\" resultMap=\"${className}Map\">\r\n" +
                         "\t\tSELECT \r\n" +
@@ -358,7 +427,6 @@ public class Domain2Mapper {
                         "\t\t<include refid=\"tb\"/> \r\n" +
                         "\t\tWHERE id = #{id}\r\n" +
                         "\t</delete>\r\n";
-
         public static String deletes_id_create =
                         "\t<delete id=\"deletes\" parameterType=\"list\">\n" +
                         "\t\tDELETE FROM\n" +

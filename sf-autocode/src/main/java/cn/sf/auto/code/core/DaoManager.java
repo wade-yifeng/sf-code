@@ -43,8 +43,7 @@ public class DaoManager {
             sbDao.append("public class " + f + "Dao extends "+
                     daoPackageExtend.substring(daoPackageExtend.lastIndexOf(".")+1) +"<" + f + "> {\r\n");
             sbDao.append("\r\n\r\n}");
-            String className = f.substring(0,1).toUpperCase()+f.substring(1,f.length());
-            CommonUtils.genFile(daoPath + '/' + className + "Dao.java", sbDao.toString());
+            CommonUtils.genFile(daoPath + '/' + CommonUtils.firstUpper(f) + "Dao.java", sbDao.toString());
         });
 
     }
@@ -81,8 +80,7 @@ public class DaoManager {
             sbManager.append("\t@Autowired\r\n");
             sbManager.append("\tprivate " + f + "Dao " + f.substring(0, 1).toLowerCase() + f.substring(1) + "Dao;\r\n");
             sbManager.append("\r\n\r\n}");
-            String className = f.substring(0,1).toUpperCase()+f.substring(1,f.length());
-            CommonUtils.genFile(managerPath + '/' + className + "Manager.java", sbManager.toString());
+            CommonUtils.genFile(managerPath + '/' + CommonUtils.firstUpper(f) + "Manager.java", sbManager.toString());
         });
     }
 

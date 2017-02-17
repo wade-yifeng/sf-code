@@ -114,6 +114,14 @@ public class CommonUtils {
         throw AutoCodeException.valueOf(message);
     }
 
+    public static String firstUpper(String input){
+        if(input==null||input.length()<1){
+            String message = input + " is null or ''. ";
+            throw AutoCodeException.valueOf(message);
+        }
+        return input.substring(0,1).toUpperCase()+input.substring(1,input.length());
+    }
+
     public static Connection getConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
