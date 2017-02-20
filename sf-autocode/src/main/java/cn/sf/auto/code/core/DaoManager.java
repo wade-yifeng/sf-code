@@ -31,19 +31,19 @@ public class DaoManager {
         }
 
         fileNames.forEach(f -> {
-            f = CommonUtils.ruleConvert(f,StringConstants.UNDER_LINE,StringConstants.CAMEL);
+            f = CommonUtils.firstUpper(CommonUtils.ruleConvert(f,StringConstants.UNDER_LINE,StringConstants.CAMEL));
             StringBuilder sbDao = new StringBuilder();
             sbDao.append("package " + packageDao + ";\r\n\r\n");
             sbDao.append("import lombok.extern.slf4j.Slf4j;\r\n");
             sbDao.append("import org.springframework.stereotype.Repository;\r\n");
             sbDao.append("import " + daoPackageExtend+";\r\n");
-            sbDao.append("import " + daoPackageDomain + "." + f + ";\r\n\r\n");
+            sbDao.append("import " + daoPackageDomain + "." + CommonUtils.firstUpper(f) + ";\r\n\r\n");
             sbDao.append("@Repository\r\n");
             sbDao.append("@Slf4j\r\n");
             sbDao.append("public class " + f + "Dao extends "+
                     daoPackageExtend.substring(daoPackageExtend.lastIndexOf(".")+1) +"<" + f + "> {\r\n");
             sbDao.append("\r\n\r\n}");
-            CommonUtils.genFile(daoPath + '/' + CommonUtils.firstUpper(f) + "Dao.java", sbDao.toString());
+            CommonUtils.genFile(daoPath + '/' + f + "Dao.java", sbDao.toString());
         });
 
     }
@@ -67,7 +67,7 @@ public class DaoManager {
             fileNames = StringConstants.allTableNames;
         }
         fileNames.forEach(f -> {
-            f = CommonUtils.ruleConvert(f,StringConstants.UNDER_LINE,StringConstants.CAMEL);
+            f = CommonUtils.firstUpper(CommonUtils.ruleConvert(f,StringConstants.UNDER_LINE,StringConstants.CAMEL));
             StringBuilder sbManager = new StringBuilder();
             sbManager.append("package " + packageManager + ";\r\n\r\n");
             sbManager.append("import lombok.extern.slf4j.Slf4j;\r\n");
@@ -80,7 +80,7 @@ public class DaoManager {
             sbManager.append("\t@Autowired\r\n");
             sbManager.append("\tprivate " + f + "Dao " + f.substring(0, 1).toLowerCase() + f.substring(1) + "Dao;\r\n");
             sbManager.append("\r\n\r\n}");
-            CommonUtils.genFile(managerPath + '/' + CommonUtils.firstUpper(f) + "Manager.java", sbManager.toString());
+            CommonUtils.genFile(managerPath + '/' + f + "Manager.java", sbManager.toString());
         });
     }
 
