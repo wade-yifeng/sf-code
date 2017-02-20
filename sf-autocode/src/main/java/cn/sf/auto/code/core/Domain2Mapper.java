@@ -129,7 +129,7 @@ public class Domain2Mapper {
 
     private static String genTableNameString() {
         StringBuilder sb = new StringBuilder();
-        String className = CommonUtils.ruleConvert(clazz, StringConstants.CAMEL, StringConstants.UNDER_LINE);
+        String className = CommonUtils.ruleConvert(CommonUtils.firstLower(clazz), StringConstants.CAMEL, StringConstants.UNDER_LINE);
         sb.append(MapperTemplate.sql_id_tb.replace("${tableName}", className));
         return sb.toString();
     }
