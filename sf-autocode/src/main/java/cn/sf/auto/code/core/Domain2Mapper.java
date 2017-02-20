@@ -319,127 +319,127 @@ public class Domain2Mapper {
         public static String mapper_start = "<mapper namespace=\"${className}\">\r\n";
         public static String mapper_end = "</mapper>\r\n";
 
-        public static String resultMap_start = "\t<resultMap id=\"${className}Map\" type=\"${className}\">\r\n";
-        public static String resultMap_result = "\t\t<result column=\"${columnName}\" property=\"${fieldName}\"/>\r\n";
-        public static String resultMap_end = "\t</resultMap>\r\n";
+        public static String resultMap_start = "    <resultMap id=\"${className}Map\" type=\"${className}\">\r\n";
+        public static String resultMap_result = "        <result column=\"${columnName}\" property=\"${fieldName}\"/>\r\n";
+        public static String resultMap_end = "    </resultMap>\r\n";
 
-        public static String sql_id_tb = "\t<sql id=\"tb\">\r\n\t\t${tableName}\r\n\t</sql>\r\n";
+        public static String sql_id_tb = "    <sql id=\"tb\">\r\n        ${tableName}\r\n    </sql>\r\n";
 
-        public static String sql_id_cols_start = "\t<sql id=\"cols\">\r\n\t\t";
+        public static String sql_id_cols_start = "    <sql id=\"cols\">\r\n        ";
         public static String sql_id_cols_value = "${columnName},";
-        public static String sql_id_cols_end = "\r\n\t</sql>\r\n";
+        public static String sql_id_cols_end = "\r\n    </sql>\r\n";
 
         public static String sql_id_cols_all =
-                "\t<sql id=\"cols_all\">\r\n" +
-                "\t\tid,\r\n" +
-                "\t\t<include refid=\"cols\"/>\r\n" +
-                "\t</sql>\r\n";
+                "    <sql id=\"cols_all\">\r\n" +
+                "        id,\r\n" +
+                "        <include refid=\"cols\"/>\r\n" +
+                "    </sql>\r\n";
 
-        public static String sql_id_vals_start = "\t<sql id=\"vals\">\r\n\t\t";
+        public static String sql_id_vals_start = "    <sql id=\"vals\">\r\n        ";
         public static String sql_id_vals_value = "#{${fieldName}},";
-        public static String sql_id_vals_end = "\r\n\t</sql>\r\n";
+        public static String sql_id_vals_end = "\r\n    </sql>\r\n";
 
-        public static String sql_id_vals_list_start = "\t<sql id=\"vals_list\">\r\n\t\t(";
+        public static String sql_id_vals_list_start = "    <sql id=\"vals_list\">\r\n        (";
         public static String sql_id_vals_list_value = "#{item.${fieldName}},";
-        public static String sql_id_vals_list_end = ")\r\n\t</sql>\r\n";
+        public static String sql_id_vals_list_end = ")\r\n    </sql>\r\n";
 
-        public static String sql_id_dynamic_condition_start = "\t<sql id=\"dynamic_condition\">\r\n";
-        public static String sql_id_dynamic_condition_value = "\t\t<if test=\"${fieldName} != null \">AND ${columnName} = #{${fieldName}}</if>\r\n";
-        public static String sql_id_dynamic_condition_end = "\t</sql>\r\n";
+        public static String sql_id_dynamic_condition_start = "    <sql id=\"dynamic_condition\">\r\n";
+        public static String sql_id_dynamic_condition_value = "        <if test=\"${fieldName} != null \">AND ${columnName} = #{${fieldName}}</if>\r\n";
+        public static String sql_id_dynamic_condition_end = "    </sql>\r\n";
 
-        public static String sql_id_set_start = "\t<sql id=\"set\">\r\n";
-        public static String sql_id_set_value = "\t\t<if test=\"${fieldName} !=null\">,${columnName} = #{${fieldName}}</if>\r\n";
-        public static String sql_id_set_end = "\t</sql>\r\n";
+        public static String sql_id_set_start = "    <sql id=\"set\">\r\n";
+        public static String sql_id_set_value = "        <if test=\"${fieldName} !=null\">,${columnName} = #{${fieldName}}</if>\r\n";
+        public static String sql_id_set_end = "    </sql>\r\n";
 
         public static String insert_id_create =
-                        "\t<insert id=\"create\" parameterType=\"${className}\" keyProperty=\"id\" useGeneratedKeys=\"true\">\r\n" +
-                        "\t\tINSERT INTO\r\n" +
-                        "\t\t<include refid=\"tb\"/>\r\n" +
-                        "\t\t(\r\n" +
-                        "\t\t<include refid=\"cols\"/>\r\n" +
-                        "\t\t)\r\n" +
-                        "\t\tVALUES\r\n" +
-                        "\t\t(\r\n" +
-                        "\t\t<include refid=\"vals\"/>\r\n" +
-                        "\t\t)\r\n" +
-                        "\t</insert>\r\n";
+                        "    <insert id=\"create\" parameterType=\"${className}\" keyProperty=\"id\" useGeneratedKeys=\"true\">\r\n" +
+                        "        INSERT INTO\r\n" +
+                        "        <include refid=\"tb\"/>\r\n" +
+                        "        (\r\n" +
+                        "        <include refid=\"cols\"/>\r\n" +
+                        "        )\r\n" +
+                        "        VALUES\r\n" +
+                        "        (\r\n" +
+                        "        <include refid=\"vals\"/>\r\n" +
+                        "        )\r\n" +
+                        "    </insert>\r\n";
         public static String insert_id_creates =
-                        "\t<insert id=\"creates\" parameterType=\"list\">\r\n" +
-                        "\t\tINSERT INTO\r\n" +
-                        "\t\t<include refid=\"tb\"/>\r\n" +
-                        "\t\t(\r\n" +
-                        "\t\t<include refid=\"cols\"/>\r\n" +
-                        "\t\t)\r\n" +
-                        "\t\tVALUES\r\n" +
-                        "\t\t<foreach collection=\"list\" item=\"item\" index=\"index\" separator=\",\">\r\n" +
-                        "\t\t\t<include refid=\"vals_list\"/>\r\n" +
-                        "\t\t</foreach>\r\n"+
-                        "\t</insert>\r\n";
+                        "    <insert id=\"creates\" parameterType=\"list\">\r\n" +
+                        "        INSERT INTO\r\n" +
+                        "        <include refid=\"tb\"/>\r\n" +
+                        "        (\r\n" +
+                        "        <include refid=\"cols\"/>\r\n" +
+                        "        )\r\n" +
+                        "        VALUES\r\n" +
+                        "        <foreach collection=\"list\" item=\"item\" index=\"index\" separator=\",\">\r\n" +
+                        "            <include refid=\"vals_list\"/>\r\n" +
+                        "        </foreach>\r\n"+
+                        "    </insert>\r\n";
         public static String update_id_update =
-                        "\t<update id=\"update\" parameterType=\"${className}\">\r\n"+
-                        "\t\tUPDATE\r\n" +
-                        "\t\t<include refid=\"tb\"/>\r\n" +
-                        "\t\t<set>\r\n"+
-                        "\t\t\tid=#{id}\r\n"+
-                        "\t\t\t<include refid=\"set\"/>\r\n"+
-                        "\t\t</set>\r\n"+
-                        "\t\tWHERE id=#{id}\r\n"+
-                        "\t</update>\r\n";
+                        "    <update id=\"update\" parameterType=\"${className}\">\r\n"+
+                        "        UPDATE\r\n" +
+                        "        <include refid=\"tb\"/>\r\n" +
+                        "        <set>\r\n"+
+                        "            id=#{id}\r\n"+
+                        "            <include refid=\"set\"/>\r\n"+
+                        "        </set>\r\n"+
+                        "        WHERE id=#{id}\r\n"+
+                        "    </update>\r\n";
         public static String paging_id_create =
-                        "\t<select id=\"paging\" parameterType=\"map\" resultMap=\"${className}Map\">\r\n" +
-                        "\t\tSELECT \r\n" +
-                        "\t\t<include refid=\"cols_all\"/> \r\n" +
-                        "\t\tFROM \r\n" +
-                        "\t\t<include refid=\"tb\"/>\r\n" +
-                        "\t\tWHERE 1=1 \r\n" +
-                        "\t\t<include refid=\"dynamic_condition\"/>\r\n" +
-                        "\t\tLIMIT #{offset}, #{limit}\r\n" +
-                        "\t</select>\r\n";
+                        "    <select id=\"paging\" parameterType=\"map\" resultMap=\"${className}Map\">\r\n" +
+                        "        SELECT \r\n" +
+                        "        <include refid=\"cols_all\"/> \r\n" +
+                        "        FROM \r\n" +
+                        "        <include refid=\"tb\"/>\r\n" +
+                        "        WHERE 1=1 \r\n" +
+                        "        <include refid=\"dynamic_condition\"/>\r\n" +
+                        "        LIMIT #{offset}, #{limit}\r\n" +
+                        "    </select>\r\n";
         public static String count_id_create =
-                        "\t<select id=\"count\" parameterType=\"map\" resultType=\"long\">\r\n" +
-                        "\t\tSELECT \r\n" +
-                        "\t\tcount(1) \r\n" +
-                        "\t\tFROM \r\n" +
-                        "\t\t<include refid=\"tb\"/> \r\n" +
-                        "\t\tWHERE 1=1 \r\n" +
-                        "\t\t<include refid=\"dynamic_condition\"/>\r\n" +
-                        "\t</select>\r\n";
+                        "    <select id=\"count\" parameterType=\"map\" resultType=\"long\">\r\n" +
+                        "        SELECT \r\n" +
+                        "        count(1) \r\n" +
+                        "        FROM \r\n" +
+                        "        <include refid=\"tb\"/> \r\n" +
+                        "        WHERE 1=1 \r\n" +
+                        "        <include refid=\"dynamic_condition\"/>\r\n" +
+                        "    </select>\r\n";
         public static String load_id_create =
-                        "\t<select id=\"load\" parameterType=\"long\" resultMap=\"${className}Map\">\r\n" +
-                        "\t\tSELECT \r\n" +
-                        "\t\t<include refid=\"cols_all\" /> \r\n" +
-                        "\t\tFROM \r\n" +
-                        "\t\t<include refid=\"tb\" /> \r\n" +
-                        "\t\tWHERE id = #{id}\r\n" +
-                        "\t</select>\r\n";
+                        "    <select id=\"load\" parameterType=\"long\" resultMap=\"${className}Map\">\r\n" +
+                        "        SELECT \r\n" +
+                        "        <include refid=\"cols_all\" /> \r\n" +
+                        "        FROM \r\n" +
+                        "        <include refid=\"tb\" /> \r\n" +
+                        "        WHERE id = #{id}\r\n" +
+                        "    </select>\r\n";
         public static String list_id_create =
-                        "\t<select id=\"list\" parameterType=\"map\" resultMap=\"${className}Map\">\r\n" +
-                        "\t\tSELECT \r\n" +
-                        "\t\t<include refid=\"cols_all\"/> \r\n" +
-                        "\t\tFROM \r\n" +
-                        "\t\t<include refid=\"tb\"/>\r\n" +
-                        "\t\tWHERE 1=1 \r\n" +
-                        "\t\t<include refid=\"dynamic_condition\"/>\r\n" +
-                        "\t</select>\r\n";
+                        "    <select id=\"list\" parameterType=\"map\" resultMap=\"${className}Map\">\r\n" +
+                        "        SELECT \r\n" +
+                        "        <include refid=\"cols_all\"/> \r\n" +
+                        "        FROM \r\n" +
+                        "        <include refid=\"tb\"/>\r\n" +
+                        "        WHERE 1=1 \r\n" +
+                        "        <include refid=\"dynamic_condition\"/>\r\n" +
+                        "    </select>\r\n";
         public static String delete_id_create =
-                        "\t<delete id=\"delete\" parameterType=\"long\">\r\n" +
-                        "\t\tDELETE FROM \r\n" +
-                        "\t\t<include refid=\"tb\"/> \r\n" +
-                        "\t\tWHERE id = #{id}\r\n" +
-                        "\t</delete>\r\n";
+                        "    <delete id=\"delete\" parameterType=\"long\">\r\n" +
+                        "        DELETE FROM \r\n" +
+                        "        <include refid=\"tb\"/> \r\n" +
+                        "        WHERE id = #{id}\r\n" +
+                        "    </delete>\r\n";
         public static String deletes_id_create =
-                        "\t<delete id=\"deletes\" parameterType=\"list\">\r\n" +
-                        "\t\tDELETE FROM\r\n" +
-                        "\t\t<include refid=\"tb\"/>\r\n" +
-                        "\t\tWHERE\r\n" +
-                        "\t\tid\r\n" +
-                        "\t\tIN\r\n" +
-                        "\t\t(\r\n" +
-                        "\t\t\t<foreach collection=\"list\" index=\"index\" item=\"id\" separator=\",\">\r\n" +
-                        "\t\t\t\t#{id}\r\n" +
-                        "\t\t\t</foreach>\r\n" +
-                        "\t\t)\r\n" +
-                        "\t</delete>\r\n";
+                        "    <delete id=\"deletes\" parameterType=\"list\">\r\n" +
+                        "        DELETE FROM\r\n" +
+                        "        <include refid=\"tb\"/>\r\n" +
+                        "        WHERE\r\n" +
+                        "        id\r\n" +
+                        "        IN\r\n" +
+                        "        (\r\n" +
+                        "            <foreach collection=\"list\" index=\"index\" item=\"id\" separator=\",\">\r\n" +
+                        "                #{id}\r\n" +
+                        "            </foreach>\r\n" +
+                        "        )\r\n" +
+                        "    </delete>\r\n";
 
     }
 

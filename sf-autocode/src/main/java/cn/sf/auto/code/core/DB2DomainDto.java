@@ -43,15 +43,17 @@ public class DB2DomainDto {
             String className = CommonUtils.ruleConvert(t.replaceFirst(t.substring(0, 1), t.substring(0, 1).toUpperCase()),dbNameRule,javaNameRule);
             StringBuilder sbDomain = new StringBuilder();
             sbDomain.append("package " + packageDomain + ";\r\n\r\n");
-            sbDomain.append("import lombok.Data;\r\n\r\n");
+            sbDomain.append("import lombok.Data;\r\n");
+            sbDomain.append("import lombok.NoArgsConstructor;\r\n\r\n");
             sbDomain.append("import java.io.Serializable;\r\n");
             sbDomain.append("import java.util.Date;\r\n\r\n");
             if (!StringUtils.isBlank(StringConstants.tableCommentMap.get(t))) {
                 sbDomain.append("//" + StringConstants.tableCommentMap.get(t) + "\r\n");
             }
             sbDomain.append("@Data\r\n");
+            sbDomain.append("@NoArgsConstructor\r\n");
             sbDomain.append("public class " + className + " implements Serializable {\r\n");
-            sbDomain.append("\tprivate static final long serialVersionUID = 1L;\r\n\r\n");
+            sbDomain.append("    private static final long serialVersionUID = 1L;\r\n\r\n");
             dbMaps.forEach(dbMap -> {
                 String type = "";
                 //末尾带有Id的属性类型为Long
@@ -60,7 +62,7 @@ public class DB2DomainDto {
                 } else {
                     type = StringConstants.typeMap.get(dbMap.getType());
                 }
-                sbDomain.append("\t" + "private " + type + " " + CommonUtils.ruleConvert(dbMap.getField(),dbNameRule,javaNameRule) + ";//" + dbMap.getMemo() + "\r\n");
+                sbDomain.append("    " + "private " + type + " " + CommonUtils.ruleConvert(dbMap.getField(),dbNameRule,javaNameRule) + ";//" + dbMap.getMemo() + "\r\n");
             });
             sbDomain.append("}\r\n\r\n");
             CommonUtils.genFile(domainPath + "/" + className + ".java", sbDomain.toString());
@@ -99,15 +101,17 @@ public class DB2DomainDto {
             String className = CommonUtils.ruleConvert(t.replaceFirst(t.substring(0, 1), t.substring(0, 1).toUpperCase()),dbNameRule,javaNameRule);
             StringBuilder sbDto = new StringBuilder();
             sbDto.append("package " + packageDto + ";\r\n\r\n");
-            sbDto.append("import lombok.Data;\r\n\r\n");
+            sbDto.append("import lombok.Data;\r\n");
+            sbDto.append("import lombok.NoArgsConstructor;\r\n\r\n");
             sbDto.append("import java.io.Serializable;\r\n");
             sbDto.append("import java.util.Date;\r\n\r\n");
             if (!StringUtils.isBlank(StringConstants.tableCommentMap.get(t))) {
                 sbDto.append("//" + StringConstants.tableCommentMap.get(t) + "\r\n");
             }
             sbDto.append("@Data\r\n");
+            sbDto.append("@NoArgsConstructor\r\n");
             sbDto.append("public class " + className + "Dto" + " implements Serializable {\r\n");
-            sbDto.append("\tprivate static final long serialVersionUID = 1L;\r\n\r\n");
+            sbDto.append("    private static final long serialVersionUID = 1L;\r\n\r\n");
             dbMaps.forEach(dbMap -> {
                 String type = "";
                 if (dbMap.getField().toLowerCase().lastIndexOf("id") > 0 || dbMap.getField().equals("id")) {
@@ -115,7 +119,7 @@ public class DB2DomainDto {
                 } else {
                     type = StringConstants.typeMap.get(dbMap.getType());
                 }
-                sbDto.append("\t" + "private " + type + " " + CommonUtils.ruleConvert(dbMap.getField(),dbNameRule,javaNameRule) + ";//" + dbMap.getMemo() + "\r\n");
+                sbDto.append("    " + "private " + type + " " + CommonUtils.ruleConvert(dbMap.getField(),dbNameRule,javaNameRule) + ";//" + dbMap.getMemo() + "\r\n");
             });
             sbDto.append("}\r\n\r\n");
             CommonUtils.genFile(dtoPath + "/" + className + "Dto.java", sbDto.toString());

@@ -77,8 +77,8 @@ public class DaoManager {
             sbManager.append("@Repository\r\n");
             sbManager.append("@Slf4j\r\n");
             sbManager.append("public class " + f + "Manager {\r\n\r\n");
-            sbManager.append("\t@Autowired\r\n");
-            sbManager.append("\tprivate " + f + "Dao " + f.substring(0, 1).toLowerCase() + f.substring(1) + "Dao;\r\n");
+            sbManager.append("    @Autowired\r\n");
+            sbManager.append("    private " + f + "Dao " + f.substring(0, 1).toLowerCase() + f.substring(1) + "Dao;\r\n");
             sbManager.append("\r\n\r\n}");
             CommonUtils.genFile(managerPath + '/' + f + "Manager.java", sbManager.toString());
         });

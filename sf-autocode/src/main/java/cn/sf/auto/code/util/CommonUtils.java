@@ -116,10 +116,18 @@ public class CommonUtils {
 
     public static String firstUpper(String input){
         if(input==null||input.length()<1){
-            String message = input + " is null or ''. ";
+            String message = "upper input is null or ''. ";
             throw AutoCodeException.valueOf(message);
         }
         return input.substring(0,1).toUpperCase()+input.substring(1,input.length());
+    }
+
+    public static String firstLower(String input){
+        if(input==null||input.length()<1){
+            String message = "lower input is null or ''.";
+            throw AutoCodeException.valueOf(message);
+        }
+        return input.substring(0,1).toLowerCase()+input.substring(1,input.length());
     }
 
     public static Connection getConnection() {
