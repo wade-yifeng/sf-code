@@ -10,15 +10,20 @@ import java.util.stream.Collectors;
 
 public class DaoManager {
 
+    final static String daoPath = PropertiesLoad.getByKey("dao_path", Boolean.TRUE);
+    final static String packageDao = PropertiesLoad.getByKey("package_dao", Boolean.TRUE);
+    final static String daoPackageDomain = PropertiesLoad.getByKey("dao_package_domain", Boolean.TRUE);
+    final static String daoPackageExtend = PropertiesLoad.getByKey("dao_package_extend", Boolean.TRUE);
+    final static String managerPath = PropertiesLoad.getByKey("manager_path", Boolean.TRUE);
+    final static String packageManager = PropertiesLoad.getByKey("package_manager", Boolean.TRUE);
+    final static String managerPackageDao = PropertiesLoad.getByKey("manager_package_dao", Boolean.TRUE);
+
     public synchronized static void genDao() {
         //此处可能会抛出异常,不进行捕获了,请填写正确的值,true or false
         if (!Boolean.valueOf(PropertiesLoad.getByKey("gen_dao", Boolean.TRUE))) {
             return;
         }
-        final String daoPath = PropertiesLoad.getByKey("dao_path", Boolean.TRUE);
-        final String packageDao = PropertiesLoad.getByKey("package_dao", Boolean.TRUE);
-        final String daoPackageDomain = PropertiesLoad.getByKey("dao_package_domain", Boolean.TRUE);
-        final String daoPackageExtend = PropertiesLoad.getByKey("dao_package_extend", Boolean.TRUE);
+
         List<String> fileNames = Splitter.on(",")
                 .omitEmptyStrings()
                 .trimResults()
@@ -53,9 +58,7 @@ public class DaoManager {
         if (!Boolean.valueOf(PropertiesLoad.getByKey("gen_manager", Boolean.TRUE))) {
             return;
         }
-        final String managerPath = PropertiesLoad.getByKey("manager_path", Boolean.TRUE);
-        final String packageManager = PropertiesLoad.getByKey("package_manager", Boolean.TRUE);
-        final String managerPackageDao = PropertiesLoad.getByKey("manager_package_dao", Boolean.TRUE);
+
         List<String> fileNames = Splitter.on(",")
                 .omitEmptyStrings()
                 .trimResults()
