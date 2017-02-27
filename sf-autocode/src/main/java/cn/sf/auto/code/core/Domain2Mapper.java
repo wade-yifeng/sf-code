@@ -271,7 +271,8 @@ public class Domain2Mapper {
         for (String str1 : dateNowVal) {
             for (String str2 : fields) {
                 if(str1.equals(str2)&&str1.matches("^update(.)*At$")){
-                    tmp = str2+"=now()";
+                    tmp = CommonUtils.ruleConvert(CommonUtils.firstLower(str2),StringConstants.CAMEL,StringConstants.UNDER_LINE)
+                            +"=now()";
                     break;
                 }
             }
@@ -389,7 +390,7 @@ public class Domain2Mapper {
                         "        UPDATE\r\n" +
                         "        <include refid=\"tb\"/>\r\n" +
                         "        <set>\r\n"+
-                        "            id=#{id}\r\n"+
+                        "            ${updatePrefix}\r\n"+
                         "            <include refid=\"set\"/>\r\n"+
                         "        </set>\r\n"+
                         "        WHERE id=#{id}\r\n"+
