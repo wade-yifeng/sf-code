@@ -1,0 +1,21 @@
+mybatis:
+  configLocation: classpath*:mybatis-config.xml
+  mapperLocations:  classpath*:mapper/*Mapper.xml
+  typeAliasesPackage: cn.sf.utils.mybatis.model
+  #typeAliases:
+  #  - "cn.sf.utils.mybatis.model.Test"
+  driver-class-name: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF8
+  username: "root"
+  password: "123456"
+  data-source-name: "defaultDataSource"
+  transaction-manager-name: "defaultTransactionManager"
+  sql-session-factory-name: "defaultSqlSessionFactory"
+  sql-session-template-name: "defaultSqlSessionTemplate"
+
+
+
+
+
+
+
