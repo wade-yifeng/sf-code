@@ -267,7 +267,16 @@ public class Domain2Mapper {
 
     private static String genUpdateString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(MapperTemplate.update_id_update.replace("${className}", clazz));
+        String tmp = "id=#{id}";
+        for (String str1 : dateNowVal) {
+            for (String str2 : fields) {
+                if(str1.equals(str2)&&str1.matches("^update(.)*At$")){
+                    tmp = str2+"=now()";
+                    break;
+                }
+            }
+        }
+        sb.append(MapperTemplate.update_id_update.replace("${className}", clazz).replace("${updatePrefix}", tmp));
         return sb.toString();
     }
 
