@@ -27,25 +27,28 @@ public class ExcelParse<T> {
         Sheet sheet = book.getSheet(sheetName);
         if(sheet==null) return Lists.newArrayList();
         List<T> retList = Lists.newArrayList();
-        try {
-            Iterator<Row> iter = sheet.rowIterator();
-            for (int i = 0; i < startRow; i++) {
-                iter.next();
-            }
-            while (iter.hasNext()) {
-                Row row = iter.next();
-                boolean isEmpty = ExcelUtils.isRowEmpty(row);
-                if (!isEmpty) {
+        boolean isExcelExp = false;
+        List<ExcelParseExceptionInfo> infoList = Lists.newArrayList();
+        Iterator<Row> iter = sheet.rowIterator();
+        for (int i = 0; i < startRow; i++) {
+            iter.next();
+        }
+        while (iter.hasNext()) {
+            Row row = iter.next();
+            boolean isEmpty = ExcelUtils.isRowEmpty(row);
+            if (!isEmpty) {
+                try {
                     retList.add(getObject(row, targetClass));
+                }catch (ExcelParseException e){
+                    isExcelExp=true;
+                    infoList.addAll(e.getInfoList());
                 }
             }
-            return retList;
-        }catch (ExcelParseException e){
-            throw e;
-        }catch (Exception e){
-            throw new RuntimeException(e);
         }
-
+        if (isExcelExp) {
+            throw new ExcelParseException(infoList);
+        }
+        return retList;
     }
 
     public T getObject(Row row, Class<T> targetClass) throws ExcelParseException {
