@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,11 +43,15 @@ public class ExcelReaderWriter {
         o1.setAttr2(12);
         o1.setAttr3(22L);
         o1.setAttr4(22.22);
+        o1.setDate1(new Date());
+        o1.setDate2(new Date());
         WriterSheetVO o2 = new WriterSheetVO();
         o2.setAttr1("萨芬");
         o2.setAttr2(12);
         o2.setAttr3(22L);
         o2.setAttr4(22.22);
+        o2.setDate1(new Date());
+        o2.setDate2(new Date());
         List<WriterSheetVO> list = Lists.newArrayList(o1,o2);
 
         //第一张sheet
@@ -56,7 +61,7 @@ public class ExcelReaderWriter {
         xlsExport.addSheet("测试2");
         xlsExport.createEXCEL(list,WriterSheetVO.class);
 
-        ExcelUtils.exportXLS(xlsExport.getWorkbook(),xlsExport.getXlsFileName());
+        xlsExport.exportXLS();
     }
 
     public static void writerXLSXExcelTest() {
@@ -71,11 +76,15 @@ public class ExcelReaderWriter {
         o1.setAttr2(12);
         o1.setAttr3(22L);
         o1.setAttr4(22.22);
+        o1.setDate1(new Date());
+        o1.setDate2(new Date());
         WriterSheetVO o2 = new WriterSheetVO();
         o2.setAttr1("萨芬");
         o2.setAttr2(12);
         o2.setAttr3(22L);
         o2.setAttr4(22.22);
+        o2.setDate1(new Date());
+        o2.setDate2(new Date());
         List<WriterSheetVO> list = Lists.newArrayList(o1,o2);
 
         //第一张sheet
@@ -85,7 +94,7 @@ public class ExcelReaderWriter {
         xlsxExport.addSheet("测试2");
         xlsxExport.createEXCEL(list,WriterSheetVO.class);
 
-        ExcelUtils.exportXLS(xlsxExport.getWorkbook(),xlsxExport.getXlsFileName());
+        xlsxExport.exportXLS();
     }
 
     public static void readExcelTest() {
@@ -141,6 +150,7 @@ public class ExcelReaderWriter {
                 sheetsMap.put(sheetName, rsVOList);
             }
         }
+        System.out.println(sb.toString());
         System.out.println(sheetsMap);
     }
 }

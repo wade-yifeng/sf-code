@@ -33,9 +33,9 @@ public class ExcelUtils {
 			return null;
 		if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
 			value = NumberToTextConverter.toText(cell.getNumericCellValue());
-		} else
+		} else {
 			value = cell.toString();
-
+		}
 		return value.trim();
 	}
 
@@ -47,40 +47,6 @@ public class ExcelUtils {
 			throw new RuntimeException("请上传xlsx文件!",e);
 		}
 		return workbook;
-	}
-
-	//导出Excel文件
-	public static void exportXLS(Workbook workbook, String filePath) {
-		try {
-			FileOutputStream fOut = new FileOutputStream(filePath);
-			workbook.write(fOut);
-			fOut.flush();
-			fOut.close();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-	}
-	//导出Excel文件
-	public static void exportXLS(Workbook workbook, OutputStream out) {
-		try {
-			workbook.write(out);
-			out.flush();
-			out.close();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		}
-	}
-	//workbook转换成InputStream
-	public static InputStream getInputStreamFromWorkbook(Workbook workbook) {
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		try {
-			workbook.write(os);
-		} catch (IOException e) {
-			log.error(e.getMessage(), e);
-		}
-		byte[] content = os.toByteArray();
-		InputStream is = new ByteArrayInputStream(content);
-		return is;
 	}
 
 }

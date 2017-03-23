@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by hznijianfeng on 2017/3/22.
@@ -25,6 +26,6 @@ public class ReaderSheetVO  implements Serializable {
     private BigDecimal attr4;
     @ExcelField(cellIndex = 4, title = "属性5",required = false, desc = "范围类型")
     private ExcelBool bool;
-    //后续扩展日期类型
-
+    @ExcelField(cellIndex = 5, dateParse = "yyyy-MM-dd HH:mm:ss",title = "属性6",required = false, desc = "日期类型")
+    private Date date;
 }

@@ -8,15 +8,12 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExcelExportField {
-	/**
-	 * excel字段描述
-	 * 
-	 * @return
-	 */
+	// excel字段描述
 	String desc() default "";
 
-	/**
-	 * excel的cellIndex
-	 */
+	// excel的cellIndex
 	int cellIndex() default 0;
+
+	// excel的date约束
+	String dateFormat() default "yyyy-MM-dd HH:mm:ss";
 }
