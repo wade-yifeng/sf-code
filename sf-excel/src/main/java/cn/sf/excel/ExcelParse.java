@@ -2,25 +2,53 @@ package cn.sf.excel;
 
 import cn.sf.excel.base.BaseEnum;
 import cn.sf.excel.excp.ExcelParseExceptionInfo;
-import cn.sf.excel.excp.ExcelParseExeption;
+import cn.sf.excel.excp.ExcelParseException;
 import cn.sf.excel.utils.ExcelUtils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Slf4j
 public class ExcelParse<T> {
 
-    public T getObject(Row row, Class targetClass) throws ExcelParseExeption {
+    public List<T> getList(Workbook book, String sheetName,Integer startRow, Class<T> targetClass) throws ExcelParseException {
+        if(book==null||sheetName==null||"".equals(sheetName)) return Lists.newArrayList();
+        Sheet sheet = book.getSheet(sheetName);
+        if(sheet==null) return Lists.newArrayList();
+        List<T> retList = Lists.newArrayList();
+        try {
+            Iterator<Row> iter = sheet.rowIterator();
+            for (int i = 0; i < startRow; i++) {
+                iter.next();
+            }
+            while (iter.hasNext()) {
+                Row row = iter.next();
+                boolean isEmpty = ExcelUtils.isRowEmpty(row);
+                if (!isEmpty) {
+                    retList.add(getObject(row, targetClass));
+                }
+            }
+            return retList;
+        }catch (ExcelParseException e){
+            throw e;
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public T getObject(Row row, Class<T> targetClass) throws ExcelParseException {
         Object target;
         boolean isExcelExp = false;
         List<ExcelParseExceptionInfo> infoList = Lists.newArrayList();
@@ -130,17 +158,15 @@ public class ExcelParse<T> {
                 Method setMethod = targetClass.getMethod(sb.toString(), field.getType());
                 try {
                     setMethod.invoke(target, value);
-                } catch (IllegalArgumentException | InvocationTargetException e) {
-                    log.error(e.getMessage(), e);
-                    return null;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return null;
+            throw new RuntimeException(e);
         }
         if (isExcelExp) {
-            throw new ExcelParseExeption(infoList);
+            throw new ExcelParseException(infoList);
         }
         return (T) target;
     }

@@ -2,21 +2,16 @@ package cn.sf.excel;
 
 import cn.sf.excel.common.ReaderSheetVO;
 import cn.sf.excel.common.WriterSheetVO;
+import cn.sf.excel.excp.ExcelParseException;
 import cn.sf.excel.excp.ExcelParseExceptionInfo;
-import cn.sf.excel.excp.ExcelParseExeption;
 import cn.sf.excel.utils.ExcelUtils;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.File;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by hznijianfeng on 2016/4/9.
@@ -103,54 +98,23 @@ public class ExcelReaderWriter {
         int index = path.indexOf("sf-excel") + "sf-excel".length();
         String filePath = path.substring(0, index) + "/src/test/java/cn/sf/excel/common/reader-test.xlsx";
         System.out.println(filePath);
-        Workbook book =  ExcelUtils.createWorkBook(filePath);
-        // 一个excel验证并解析成以sheetName为key，每行为一个对象的集合组成的MAP
         StringBuilder sb = new StringBuilder();
-        Map<String, List<ReaderSheetVO>> sheetsMap = Maps.newLinkedHashMap();
-        if (book != null) {
-            ExcelParse<ReaderSheetVO> excelParse = new ExcelParse<>();
-            int sheetNum = book.getNumberOfSheets();
-            for (int i = 0; i < sheetNum; i++) {
-                Sheet sheet = book.getSheetAt(i);
-                String sheetName = sheet.getSheetName();
-                // 如果sheetName有限制，可在此处验证
-                if (!"测试".equals(sheetName)) {
-                    sb.append("sheetName必须是测试!");
+        String sheetName = "测试";
+        Workbook book =  ExcelUtils.createWorkBook(filePath);
+        ExcelParse<ReaderSheetVO> excelParse = new ExcelParse<>();
+        try {
+            List<ReaderSheetVO> retList = excelParse.getList(book,sheetName,1,ReaderSheetVO.class);
+            System.out.println(retList);
+        } catch (ExcelParseException e) {
+            List<ExcelParseExceptionInfo> errInfos = e.getInfoList();
+            if (errInfos != null && errInfos.size() > 0) {
+                for (ExcelParseExceptionInfo errInfo : errInfos) {
+                    sb.append(sheetName + "第").append(errInfo.getRowNum()).append("行").append("，");
+                    sb.append(sheetName + "字段“").append(errInfo.getColumnName()).append("”").append("，")
+                            .append(errInfo.getErrMsg()).append(";");
                 }
-                List<ReaderSheetVO> rsVOList = Lists.newArrayList();
-                Iterator<Row> iter = sheet.rowIterator();
-                // 去除第一行
-                iter.next();
-                while (iter.hasNext()) {
-                    Row row = iter.next();
-                    boolean isEmpty = ExcelUtils.isRowEmpty(row);
-                    if (!isEmpty) {
-                        ReaderSheetVO rsVO = null;
-                        try {
-                            // 此处可抛出异常，譬如excel里的5e不能转换成ReaderSheetVO的Integer
-                            rsVO = excelParse.getObject(row, ReaderSheetVO.class);
-                        } catch (ExcelParseExeption e) {
-                            List<ExcelParseExceptionInfo> errInfos = e.getInfoList();
-                            if (errInfos != null && errInfos.size() > 0) {
-                                for (ExcelParseExceptionInfo errInfo : errInfos) {
-                                    sb.append(sheetName + "第").append(errInfo.getRowNum()).append("行").append("，");
-                                    sb.append(sheetName + "字段“").append(errInfo.getColumnName()).append("”").append("，")
-                                            .append(errInfo.getErrMsg()).append(";");
-                                }
-                            }
-                        }
-                        if (rsVO != null) {
-                            // 验证一些必要的日期字符串是否正确属性等excel组件没支持的验证过程
-                            // 验证完毕把一行数据添加到list中
-                            rsVOList.add(rsVO);
-                        }
-                    }
-                }
-                // 一个sheetName循环完填充到MAP
-                sheetsMap.put(sheetName, rsVOList);
             }
         }
         System.out.println(sb.toString());
-        System.out.println(sheetsMap);
     }
 }

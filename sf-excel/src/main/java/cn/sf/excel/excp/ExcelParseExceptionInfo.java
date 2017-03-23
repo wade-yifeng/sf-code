@@ -2,8 +2,10 @@ package cn.sf.excel.excp;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class ExcelParseExceptionInfo {
+public class ExcelParseExceptionInfo implements Serializable {
 	private int rowNum;
 
 	private String columnName;

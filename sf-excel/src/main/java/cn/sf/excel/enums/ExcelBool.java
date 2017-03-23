@@ -9,8 +9,9 @@ public enum ExcelBool implements BaseEnum {
 	 */
 	NULL(-1, "NULL"),
 
+	FALSE(0, "否"),
 	TRUE(1, "是"),
-	FALSE(0, "否");
+	;
 
 	/**
 	 * 值
