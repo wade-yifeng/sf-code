@@ -3,30 +3,28 @@ package cn.sf.excel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.FileInputStream;
 
 @Slf4j
 public class XLSExport extends AbstractExcelExport{
 
     //通过文件名构造实例
-    public XLSExport(String fileName) {
-        this.xlsFilePath = fileName;
+    public XLSExport(String exportFilePath) {
+        this.exportFilePath = exportFilePath;
         this.workbook = new HSSFWorkbook();
     }
-    //通过文件流构造实例
-    public XLSExport(InputStream ins) {
+    public XLSExport(String exportFilePath,String templateFilePath) {
         try {
-            this.workbook = new HSSFWorkbook(ins);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            this.exportFilePath = exportFilePath;
+            this.templateFilePath = templateFilePath;
+            if(templateFilePath!=null) {
+                this.workbook = new HSSFWorkbook(new FileInputStream(templateFilePath));
+            }else{
+                this.workbook = new HSSFWorkbook();
+            }
+        }catch (Exception e){
+            throw new RuntimeException(e);
         }
-    }
-    //通过文件名构造实例并创建一张sheet
-    public XLSExport(String fileName, String sheetName) {
-        this.xlsFilePath = fileName;
-        this.workbook = new HSSFWorkbook();
-        this.sheet = workbook.createSheet(sheetName);
     }
 
 }

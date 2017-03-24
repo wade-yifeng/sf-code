@@ -25,7 +25,9 @@ public abstract class AbstractExcelExport {
     private static String NUMBER_FORMAT = " #,##0.00 ";
 
     @Getter
-    protected String xlsFilePath;
+    protected String exportFilePath;
+    @Getter
+    protected String templateFilePath;
     @Getter
     protected Workbook workbook;
     @Getter
@@ -148,27 +150,14 @@ public abstract class AbstractExcelExport {
     ///////////////////////////////////////////////////////////
     //导出Excel文件
     public void exportXLS() {
-        if(xlsFilePath ==null||workbook==null){
+        if(exportFilePath ==null||workbook==null){
             return;
         }
         try {
-            FileOutputStream fOut = new FileOutputStream(xlsFilePath);
+            FileOutputStream fOut = new FileOutputStream(exportFilePath);
             workbook.write(fOut);
             fOut.flush();
             fOut.close();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-    }
-    //导出Excel文件
-    public void exportXLS(OutputStream out) {
-        if(workbook==null){
-            return;
-        }
-        try {
-            workbook.write(out);
-            out.flush();
-            out.close();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -185,8 +174,20 @@ public abstract class AbstractExcelExport {
             log.error(e.getMessage(), e);
         }
         byte[] content = os.toByteArray();
-        InputStream is = new ByteArrayInputStream(content);
-        return is;
+        return new ByteArrayInputStream(content);
+    }
+    //workbook转换成OutputStream
+    public byte[] getOutputStreamFromWorkbook() {
+        if(workbook==null){
+            return null;
+        }
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            workbook.write(os);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+        return os.toByteArray();
     }
 
     ///////////////////////////////////////////////////////////

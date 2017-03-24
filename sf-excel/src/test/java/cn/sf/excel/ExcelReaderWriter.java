@@ -21,9 +21,46 @@ public class ExcelReaderWriter {
 
 
     public static void main(String[] args) {
+        writerTemplateXLSExcelTest();
         writerXLSXExcelTest();
         writerXLSExcelTest();
         readExcelTest();
+    }
+
+    public static void writerTemplateXLSExcelTest(){
+        String path = ExcelReaderWriter.class.getResource("/").getPath();
+        int index = path.indexOf("sf-excel") + "sf-excel".length();
+        String basePath = path.substring(0, index) + "/src/test/java/cn/sf/excel/common/";
+        File file = new File(basePath+"template-writer-test.xlsx");
+        File fileImpl = new File(basePath+"template-writer-test-impl.xlsx");
+        System.out.println(file.getAbsolutePath());
+        fileImpl.delete();
+        //数据准备
+        WriterSheetVO o1 = new WriterSheetVO();
+        o1.setAttr1("萨芬发放萨法俄啊饿疯俄国呃啊飞");
+        o1.setAttr2(12);
+        o1.setAttr3(22L);
+        o1.setAttr4(22.22);
+        o1.setDate1(new Date());
+        o1.setDate2(new Date());
+        WriterSheetVO o2 = new WriterSheetVO();
+        o2.setAttr1("萨芬");
+        o2.setAttr2(12);
+        o2.setAttr3(22L);
+        o2.setAttr4(22.22);
+        o2.setDate1(new Date());
+        o2.setDate2(new Date());
+        List<WriterSheetVO> list = Lists.newArrayList(o1,o2);
+
+        //第一张sheet
+        XLSXExport xlsxExport = new XLSXExport(fileImpl.getAbsolutePath(),file.getAbsolutePath());
+        xlsxExport.changeSheet("测试1");
+        xlsxExport.createEXCEL(list,WriterSheetVO.class,1);
+        //第二张sheet
+        xlsxExport.changeSheet("测试2");
+        xlsxExport.createEXCEL(list,WriterSheetVO.class,1);
+
+        xlsxExport.exportXLS();
     }
 
     public static void writerXLSExcelTest() {
@@ -50,7 +87,8 @@ public class ExcelReaderWriter {
         List<WriterSheetVO> list = Lists.newArrayList(o1,o2);
 
         //第一张sheet
-        XLSExport xlsExport = new XLSExport(file.getAbsolutePath(),"测试1");
+        XLSExport xlsExport = new XLSExport(file.getAbsolutePath());
+        xlsExport.addSheet("测试1");
         xlsExport.createEXCEL(list,WriterSheetVO.class);
         //第二张sheet
         xlsExport.addSheet("测试2");
@@ -83,7 +121,8 @@ public class ExcelReaderWriter {
         List<WriterSheetVO> list = Lists.newArrayList(o1,o2);
 
         //第一张sheet
-        XLSXExport xlsxExport = new XLSXExport(file.getAbsolutePath(),"测试1");
+        XLSXExport xlsxExport = new XLSXExport(file.getAbsolutePath());
+        xlsxExport.addSheet("测试1");
         xlsxExport.createEXCEL(list,WriterSheetVO.class);
         //第二张sheet
         xlsxExport.addSheet("测试2");
