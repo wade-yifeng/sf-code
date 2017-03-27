@@ -19,8 +19,10 @@ import java.util.List;
 @Slf4j
 public class ExcelReaderWriter {
 
+    private static String path = ExcelReaderWriter.class.getResource("/").getPath();
 
     public static void main(String[] args) {
+        System.out.println(path);
         writerTemplateXLSExcelTest();
         writerXLSXExcelTest();
         writerXLSExcelTest();
@@ -28,11 +30,8 @@ public class ExcelReaderWriter {
     }
 
     public static void writerTemplateXLSExcelTest(){
-        String path = ExcelReaderWriter.class.getResource("/").getPath();
-        int index = path.indexOf("sf-excel") + "sf-excel".length();
-        String basePath = path.substring(0, index) + "/src/test/java/cn/sf/excel/common/";
-        File file = new File(basePath+"template-writer-test.xlsx");
-        File fileImpl = new File(basePath+"template-writer-test-impl.xlsx");
+        File file = new File(path+"template-writer-test.xlsx");
+        File fileImpl = new File(path+"template-writer-test-impl.xlsx");
         System.out.println(file.getAbsolutePath());
         fileImpl.delete();
         //数据准备
@@ -64,9 +63,7 @@ public class ExcelReaderWriter {
     }
 
     public static void writerXLSExcelTest() {
-        String path = ExcelReaderWriter.class.getResource("/").getPath();
-        int index = path.indexOf("sf-excel") + "sf-excel".length();
-        File file = new File(path.substring(0, index) + "/src/test/java/cn/sf/excel/common/writer-test.xls");
+        File file = new File(path + "writer-test.xls");
         System.out.println(file.getAbsolutePath());
         file.delete();
         //数据准备
@@ -98,9 +95,7 @@ public class ExcelReaderWriter {
     }
 
     public static void writerXLSXExcelTest() {
-        String path = ExcelReaderWriter.class.getResource("/").getPath();
-        int index = path.indexOf("sf-excel") + "sf-excel".length();
-        File file = new File(path.substring(0, index) + "/src/test/java/cn/sf/excel/common/writer-test.xlsx");
+        File file = new File(path + "writer-test.xlsx");
         System.out.println(file.getAbsolutePath());
         file.delete();
         //数据准备
@@ -133,9 +128,7 @@ public class ExcelReaderWriter {
 
     public static void readExcelTest() {
         // 验证错误信息采集，保存错误采集
-        String path = ExcelReaderWriter.class.getResource("/").getPath();
-        int index = path.indexOf("sf-excel") + "sf-excel".length();
-        String filePath = path.substring(0, index) + "/src/test/java/cn/sf/excel/common/reader-test.xlsx";
+        String filePath = path + "reader-test.xlsx";
         System.out.println(filePath);
         StringBuilder sb = new StringBuilder();
         String sheetName = "测试";
