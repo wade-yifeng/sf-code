@@ -26,10 +26,12 @@ public class StringConstants {
         typeMap.put("datetime", "Date");
         typeMap.put("date", "Date");
         typeMap.put("varchar", "String");
+        typeMap.put("char", "String");
         typeMap.put("tinyint", "Integer");
         typeMap.put("int", "Integer");
         typeMap.put("long", "Long");
         typeMap.put("bigint", "Long");
+        typeMap.put("mediumint", "Long");
         typeMap.put("smallint", "Integer");
     }
 
