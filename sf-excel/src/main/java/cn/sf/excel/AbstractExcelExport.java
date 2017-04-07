@@ -216,7 +216,7 @@ public abstract class AbstractExcelExport {
             if (excelAnnotation == null)
                 continue;
             int cellIndex = excelAnnotation.cellIndex();
-            String title = excelAnnotation.desc();
+            String title = excelAnnotation.title();
             this.setCell(cellIndex, title);
         }
         //遍历list
