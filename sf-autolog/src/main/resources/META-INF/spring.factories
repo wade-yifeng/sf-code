@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cn.sf.auto.aop.config.AutoLogConfig
+cn.sf.auto.aop.config.AutoConfig

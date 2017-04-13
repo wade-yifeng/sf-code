@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AutoLogConfig {
+public class AutoConfig {
     @Bean
     public AutoLogAspectJ setupAutoLogAspectJ() {
         AutoLogAspectJ autoLogAspectJ = new AutoLogAspectJ();

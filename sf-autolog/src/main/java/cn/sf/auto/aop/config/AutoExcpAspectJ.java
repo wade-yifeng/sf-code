@@ -24,16 +24,16 @@ public class AutoExcpAspectJ {
 
     //@within 用于匹配所以持有指定注解类型内的方法；代理织入
     @Pointcut("@within(cn.sf.auto.aop.annotations.AutoExcp) && execution(public * *(..))")
-    public void AutoLogAspectClass() {
+    public void AutoExcpAspectClass() {
     }
 
     //@annotation 用于匹配当前执行方法持有指定注解的方法；运行切入
     @Pointcut("@annotation(cn.sf.auto.aop.annotations.AutoExcp)")
-    public void AutoLogAspectMethod() {
+    public void AutoExcpAspectMethod() {
     }
 
     //[测试模块][测试]Exception List-->cn.sf.auto.log.clazz.ExcpClass#test1:java.lang.RuntimeException
-    @Around("AutoLogAspectClass() || AutoLogAspectMethod()")
+    @Around("AutoExcpAspectClass() || AutoExcpAspectMethod()")
     public Object doAroundForExcp(final ProceedingJoinPoint pjp) {
         Method method = ((MethodSignature) pjp.getSignature()).getMethod();
         Class clazz = pjp.getTarget().getClass();
