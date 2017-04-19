@@ -18,3 +18,13 @@ netty权威指南的示例
 
 #sf-excel
 excel的操作封装
+
+#maven的中心镜像配置
+    <mirrors>
+        <mirror>
+          <id>alimaven</id>
+          <name>aliyun maven</name>
+          <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+          <mirrorOf>central</mirrorOf>        
+        </mirror>
+    </mirrors>

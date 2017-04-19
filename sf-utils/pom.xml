@@ -61,7 +61,7 @@
             <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis-spring</artifactId>
-                <version>${mybatis.version}</version>
+                <version>${mybatis-spring.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.springframework</groupId>
