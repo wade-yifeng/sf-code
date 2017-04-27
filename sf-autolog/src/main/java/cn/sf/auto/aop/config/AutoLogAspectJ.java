@@ -32,9 +32,14 @@ public class AutoLogAspectJ {
     //[测试模块][测试]Param List-->cn.sf.auto.log.clazz.LogClass#test1:["input"]
     @Before(value = "AutoLogAspectClass() || AutoLogAspectMethod()")
     public void doServiceBefore(final JoinPoint point) {
-        Method method = ((MethodSignature) point.getSignature()).getMethod();
         Class clazz = point.getTarget().getClass();
-
+        Method iMethod = ((MethodSignature) point.getSignature()).getMethod();//interface或者class方法,实现类可用接口来调用
+        Method method;//真实类的方法
+        try {
+            method = clazz.getMethod(iMethod.getName(),iMethod.getParameterTypes());
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
         //方法上有SkipAutoLog注解,不打log
         if (isSkipAutoLogWork(method)) {
             return;

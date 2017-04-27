@@ -35,8 +35,14 @@ public class AutoExcpAspectJ {
     //[测试模块][测试]Exception List-->cn.sf.auto.log.clazz.ExcpClass#test1:java.lang.RuntimeException
     @Around("AutoExcpAspectClass() || AutoExcpAspectMethod()")
     public Object doAroundForExcp(final ProceedingJoinPoint pjp) {
-        Method method = ((MethodSignature) pjp.getSignature()).getMethod();
         Class clazz = pjp.getTarget().getClass();
+        Method iMethod = ((MethodSignature) pjp.getSignature()).getMethod();//interface或者class方法,实现类可用接口来调用
+        Method method;//真实类的方法
+        try {
+            method = clazz.getMethod(iMethod.getName(),iMethod.getParameterTypes());
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
         //方法上有SkipAutoLog注解,不进行捕获异常
         AutoExcpSkip autoExcpSkip = method.getAnnotation(AutoExcpSkip.class);
         if (null != autoExcpSkip) {
