@@ -5,6 +5,7 @@ import cn.sf.auto.aop.annotations.AutoExcpSkip;
 import cn.sf.auto.aop.excps.IPrintErrorLog;
 import cn.sf.auto.aop.excps.IPrintInfoLog;
 import cn.sf.auto.aop.excps.IReThrowException;
+import cn.sf.auto.aop.excps.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -16,6 +17,7 @@ import org.springframework.core.annotation.Order;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 
 @Aspect
 @Order(value = 0)
@@ -74,45 +76,86 @@ public class AutoExcpAspectJ {
         sb.append(method.getName());
         sb.append(":");
 
-        Throwable whatIsExcp = null;
-
+        Class returnType = ((MethodSignature) pjp.getSignature()).getReturnType();
         try {
             return pjp.proceed();
-        } catch (RuntimeException e) {
-            whatIsExcp = e;
-            String tempStr = sb+getStackTraceAsString(e);
-            if (e instanceof IPrintInfoLog) {
-                log.info(tempStr);
-            }else if (e instanceof IPrintErrorLog) {
-                log.error(tempStr);
-            }else if (e instanceof IReThrowException) {
-                log.error(tempStr);
-                throw e;
+        } catch (ServiceException ex) {
+            log.info("======================ServiceException======================");
+            log.warn("code:{}, message:{}, context:{}", ex.getErrorCode(), ex.getErrorMessage(), ex.getContext());
+            log.warn(sb + getStackTraceAsString(ex));
+            return failReturn(ex.getErrorMessage(), returnType);
+        } catch (SQLException ex) {
+            log.error("======================SQLException======================");
+            log.error(sb + getStackTraceAsString(ex));
+            return failReturn("sql exception", returnType);
+        }catch (RuntimeException ex) {
+            if (ex instanceof IPrintInfoLog) {
+                log.info("======================IPrintInfoLog======================");
+                log.info(sb + getStackTraceAsString(ex));
+                return failReturn("info exception!", returnType);
+            }else if (ex instanceof IPrintErrorLog) {
+                log.error("======================IPrintErrorLog======================");
+                log.error(sb + getStackTraceAsString(ex));
+                return failReturn("error exception!", returnType);
+            }else if (ex instanceof IReThrowException) {
+                log.error("======================IReThrowException======================");
+                log.error(sb + getStackTraceAsString(ex));
+                throw ex;
             }else{
-                log.error(tempStr);
+                log.error("======================RuntimeException======================");
+                log.error(sb + getStackTraceAsString(ex));
+                return failReturn("run time exception!", returnType);
             }
-        } catch (Exception e) {
-            whatIsExcp = e;
-            String tempStr = sb+getStackTraceAsString(e);
-            log.error(tempStr);
-        } catch (Throwable throwable) {
-            whatIsExcp = throwable;
-            String tempStr = sb+getStackTraceAsString(throwable);
-            log.error(tempStr);
+        } catch (Exception ex) {
+            log.error("======================Exception======================");
+            log.error(sb + getStackTraceAsString(ex));
+            return failReturn("exception!", returnType);
+        } catch (Throwable ex) {
+            log.error("======================Throwable======================");
+            log.error(sb + getStackTraceAsString(ex));
+            return failReturn("throwable!", returnType);
         }
-        return failReturn(whatIsExcp);
     }
 
     //根据框架不同自由发挥
-    protected Object failReturn(Throwable throwable){
-//        if (throwable instanceof TimeoutException) {
-//            Response result = new Response();
-//            result.setError(SysErrorCode.DUBBO_TIMEOUT_EXCEPTION.getDesc());
-//            result.setSuccess(false);
-//            return result;
+    protected Object failReturn(String errorMessage, Class returnType){
+//        if (Response.class == returnType) {
+//            return Response.fail(errorMessage);
 //        }
-        //默认返回null
-        return null;
+//        if (OpenResponse.class == returnType) {
+//            return OpenResponse.fail(errorMessage);
+//        }
+        //基础类型int boolean等的判断
+        if (Boolean.TYPE == returnType) {
+            return false;
+        }
+        if (Byte.TYPE == returnType) {
+            return (byte) 0;
+        }
+        if (Short.TYPE == returnType) {
+            return (short) 0;
+        }
+        if (Integer.TYPE == returnType) {
+            return 0;
+        }
+        if (Float.TYPE == returnType) {
+            return 0f;
+        }
+        if (Long.TYPE == returnType) {
+            return 0L;
+        }
+        if (Double.TYPE == returnType) {
+            return 0d;
+        }
+        if (Character.TYPE == returnType) {
+            return (char) 0;
+        }
+        try {
+            return returnType.newInstance();
+        } catch (Exception ex) {
+            log.warn("没有默认构造方法",ex);
+            return null;
+        }
     }
 
     private String getStackTraceAsString(Throwable throwable) {
