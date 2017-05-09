@@ -20,6 +20,7 @@ netty权威指南的示例
 excel的操作封装
 
 #maven的中心镜像配置
+```
     <mirrors>
         <mirror>
           <id>alimaven</id>
@@ -28,3 +29,4 @@ excel的操作封装
           <mirrorOf>central</mirrorOf>        
         </mirror>
     </mirrors>
+```
