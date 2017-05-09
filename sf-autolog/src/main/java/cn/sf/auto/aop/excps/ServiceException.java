@@ -24,7 +24,9 @@ public class ServiceException extends RuntimeException {
      */
     private Map<String, Object> context;
 
-    public ServiceException(String errorMessage) {
+    public ServiceException(int errorCode, String errorMessage, Throwable cause) {
+        super(cause);
+        this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
 
@@ -38,6 +40,13 @@ public class ServiceException extends RuntimeException {
         super(cause);
         this.errorCode = errorCode.getIntValue();
         this.errorMessage = errorCode.getDesc();
+        this.context = context;
+    }
+
+    public ServiceException(int errorCode, String errorMessage, Map<String, Object> context, Throwable cause) {
+        super(cause);
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
         this.context = context;
     }
 

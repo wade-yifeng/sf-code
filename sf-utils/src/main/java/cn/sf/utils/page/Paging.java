@@ -13,6 +13,7 @@ public class Paging<T> implements Serializable {
     private Long total;
     private List<T> data;
 
+
     private Paging(Long total, List<T> data) {
         this.data = data;
         this.total = total;

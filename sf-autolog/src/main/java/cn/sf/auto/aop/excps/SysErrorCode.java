@@ -30,15 +30,10 @@ public enum SysErrorCode {
     METHOD_ARGUMENT_NOT_VALID_EXCEPTION(407, "method.argument.not.valid.exception"),
     SERVLET_REQUEST_BINDING_EXCEPTION(408, "servlet.request.binding.exception"),
     BIND_EXCEPTION(409, "bind.exception"),
-    DATA_NOT_EXIST(410, "data.not.exist"),
-    IMPORT_ERROR(411, "import.data.invalid"),
-    STATUS_MACHINE_FAIL_EXCEPTION(412, "next.status.is.invalid"),
-    OPTYPE_INVALID(413, "operation.type.invalid"),
+
     /**
-     * 逻辑检验错误 1000-1500
+     * 依赖项目请从1024开始
      */
-
-
 
     ;
 
