@@ -1,5 +1,6 @@
 package cn.sf.project.controller;
 
+import cn.sf.project.aop.annos.AutoLog;
 import cn.sf.project.beans.Response;
 import cn.sf.project.dto.ProjectDto;
 import cn.sf.project.service.ProjectService;
@@ -17,6 +18,7 @@ import javax.validation.constraints.NotNull;
 @Controller
 @RequestMapping("/project")
 @Slf4j
+@AutoLog
 public class ProjectController {
 
 	@Resource

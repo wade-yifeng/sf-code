@@ -1,5 +1,7 @@
 package cn.sf.project.outer;
 
+import cn.sf.project.aop.annos.AutoExcp;
+import cn.sf.project.aop.annos.AutoLog;
 import cn.sf.project.dao.ProjectDao;
 import cn.sf.project.domain.Project;
 import cn.sf.project.dto.ProjectDto;
@@ -15,6 +17,8 @@ import javax.annotation.Resource;
  */
 @Service("projectService")
 @Slf4j
+@AutoLog
+@AutoExcp
 public class ProjectServiceImpl implements ProjectService {
 
     @Resource
