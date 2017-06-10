@@ -1,0 +1,25 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: center-app
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/db_project?characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    testOnBorrow: true
+    validationQuery: SELECT 1
+    validationQueryTimeout: 1000
+    initialSize: 5
+    maxActive: 20
+    minIdle: 0
+    maxWait: 60000
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 100
+mybatis:
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+
+
+
